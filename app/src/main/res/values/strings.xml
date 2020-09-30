@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">DiplomApp</string>
+    <string name="gif">Gif</string>
+    <string name="mvvm_sample">MVVM Sample</string>
+</resources>
