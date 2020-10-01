@@ -9,15 +9,12 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import javax.inject.Singleton
 
+@Module
+@InstallIn(ApplicationComponent::class)
 class NetworkModule {
-
-    @Module
-    @InstallIn(ApplicationComponent::class)
-    class NetwModule {
         @Provides
         @Singleton
-        fun provideNetwork(): FlowService.Companion {
-            return FlowService
+        fun provideNetwork(): FlowService {
+            return FlowService.create()
         }
-    }
 }

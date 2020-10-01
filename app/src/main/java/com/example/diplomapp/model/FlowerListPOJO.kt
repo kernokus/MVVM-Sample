@@ -3,6 +3,8 @@ package com.example.diplomapp.model
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
+
+
 class FlowerListPOJO {
     @SerializedName("id")
     @Expose

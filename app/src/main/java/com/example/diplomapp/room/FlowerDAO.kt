@@ -1,19 +1,25 @@
 package com.example.diplomapp.room
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Update
+import androidx.lifecycle.LiveData
+import androidx.room.*
+import com.example.diplomapp.model.FlowerListPOJO
+import com.example.diplomapp.model.FlowerPOJO
 
 
 @Dao
 interface FlowerDAO {
     @Insert
-    suspend fun insert(User:Flower?)
+    suspend fun insert(Flower:Flower?)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun saveAll(ListFlowers: List<Flower>?)
 
     @Update
-    suspend fun update(User: Flower?)
+    suspend fun update(Flower: Flower?)
 
     @Delete
-    suspend fun delete(User: Flower?)
+    suspend fun delete(Flower: Flower?)
+
+    @Query("SELECT * FROM Flower")
+    fun findAll(): LiveData<List<Flower>>
 }
