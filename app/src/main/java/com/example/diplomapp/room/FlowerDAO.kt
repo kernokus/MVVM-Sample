@@ -12,7 +12,7 @@ interface FlowerDAO {
     suspend fun insert(Flower:Flower?)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun saveAll(ListFlowers: List<Flower>?)
+    suspend fun saveAll(ListFlowers: List<Flower>?)
 
     @Update
     suspend fun update(Flower: Flower?)
@@ -21,5 +21,5 @@ interface FlowerDAO {
     suspend fun delete(Flower: Flower?)
 
     @Query("SELECT * FROM Flower")
-    fun findAll(): LiveData<List<Flower>>
+    suspend fun findAll(): List<Flower>
 }

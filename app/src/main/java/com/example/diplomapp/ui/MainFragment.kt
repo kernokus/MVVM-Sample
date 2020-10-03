@@ -1,14 +1,13 @@
 package com.example.diplomapp.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -50,9 +49,19 @@ class MainFragment:Fragment() {
         recycler_view.layoutManager= LinearLayoutManager(context)
         val items: ArrayList<Flower>? = arrayListOf()
         //flowerViewModel=ViewModelProviders.of(this).get(MainViewModel::class.java)
-
         myAdapter=AdapterFlower(items)
         recycler_view.adapter =myAdapter
+        Log.d("InViewCreated","beforeObserver")
+//        flowerViewModel.getListFlowers().observe(viewLifecycleOwner, Observer {
+//            //Log.d("InObserverITIT",it.toString()) //приходит null
+//            //if (it==null) {return@Observer}
+//                myAdapter.setData(it)
+//                Log.d("InObserver","working")
+//        })
+        flowerViewModel.getListFlowers().observeNonNull(this){
+            myAdapter.setData(it)
+        }
+
 
     }
 
@@ -77,10 +86,6 @@ class MainFragment:Fragment() {
             values?.get(position)?.let { holder.bind(it) }
         }
 
-//        fun addList(items:List<Flower>) {
-//            values?.addAll(items)
-//        }
-
         fun setData(newData: List<Flower>) {
             this.values = newData
             notifyDataSetChanged()
@@ -89,7 +94,13 @@ class MainFragment:Fragment() {
 
     }
 
-
+    fun <T> LiveData<T>.observeNonNull(lifecycleOwner: LifecycleOwner, onItem: (T) -> Unit) {
+        this.observe(lifecycleOwner, object : NonNullObserver<T> {
+            override fun onChangedNonNull(t: T) {
+                onItem(t)
+            }
+        })
+    }
 
 
 }

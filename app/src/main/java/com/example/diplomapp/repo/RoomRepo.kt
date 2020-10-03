@@ -1,6 +1,9 @@
 package com.example.diplomapp.repo
 
 import android.content.Context
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.diplomapp.api.FlowService
 
 
@@ -11,6 +14,9 @@ import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.android.components.ApplicationComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class RoomRepo ( val context: Context) {
     companion object {
@@ -48,21 +54,48 @@ class RoomRepo ( val context: Context) {
     }
 
 
-    suspend fun loadInDD() {
-        val data: MutableList<Flower>? = arrayListOf()
-        val dataNetwork = network.getFlowList(API_KEY_PIXABAY, "yellow+flowers", "photo").hits
-        if (dataNetwork != null) {
-            for (item in dataNetwork) {
-                val newFlower = Flower(
-                    0,
-                    item.downloads.toString(),
-                    item.tags.toString(),
-                    item.pageURL.toString()
-                )
-                data?.add(newFlower)
-            }
-            flowerDao?.saveAll(data)
-        }
+//    suspend fun loadfromBD(): MutableLiveData<List<Flower>> {
+//        // withContext(Dispatchers.IO){}
+//        val temp=flowerDao?.findAll() //беру данные из базы данных,если они не null
+//        val data: MutableList<Flower>? = arrayListOf()
+//        val liveData:MutableLiveData<List<Flower>> = MutableLiveData()
+//            liveData.postValue(temp)
+//            Log.d("InLOADING",temp.toString())
+//            return liveData //возвращаю из бд
+//    }
 
+//    suspend fun isNotDBEmpty():Boolean { //db- not empty?
+//        if (flowerDao?.findAll()!=null) {
+//            return true
+//        }
+//        return false
+//    }
+
+    suspend fun loadInDD(): List<Flower>? {
+        val temp=flowerDao?.findAll() //беру данные из базы данных,если они не null
+        val data: MutableList<Flower>? = arrayListOf()
+        val liveData:MutableLiveData<List<Flower>> = MutableLiveData()
+        if (temp?.size!=0 && temp!=null) { //если бд не пустая
+            //liveData.postValue(temp)
+            Log.d("InLOADING",temp.toString())
+            return temp //возвращаю из бд
+        }
+        else {
+            val dataNetwork = network.getFlowList(API_KEY_PIXABAY, "yellow+flowers", "photo").hits
+            if (dataNetwork != null) {
+                for (item in dataNetwork) { //преобразую для хранения в room
+                    val newFlower = Flower(
+                        0,
+                        item.downloads.toString(),
+                        item.tags.toString(),
+                        item.largeImageURL.toString()
+                    )
+                    data?.add(newFlower)
+                }
+                flowerDao?.saveAll(data)
+                liveData.postValue(data)
+            }
+            return data //возвращаю только что полученные из бд данные
+        }
+        }
     }
-}
