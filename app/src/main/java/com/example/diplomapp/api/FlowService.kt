@@ -11,8 +11,6 @@ import retrofit2.http.Query
 interface FlowService { //прокинуть в VM
     companion object {
         const val BASE_URL_PIXABAY="https://pixabay.com/api/"
-        const val API_KEY_PIXABAY="17951668-b5172637b18686031bb7db33b"
-
         fun create(): FlowService {
             val interceptor = HttpLoggingInterceptor()
             interceptor.level = (HttpLoggingInterceptor.Level.BODY)
@@ -24,8 +22,6 @@ interface FlowService { //прокинуть в VM
                 .build()
                 .create(FlowService::class.java)
         }
-
-
     }
 
     @GET("?")

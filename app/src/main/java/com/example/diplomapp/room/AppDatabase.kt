@@ -6,6 +6,5 @@ import androidx.room.RoomDatabase
 
 @Database(entities = [Flower::class], version = 1,exportSchema = false)
 abstract class AppDatabase:RoomDatabase(){
-    abstract fun FlowerDao(): FlowerDAO?
-
+    abstract fun flowerDao(): FlowerDAO?
 }

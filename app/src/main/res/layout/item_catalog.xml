@@ -3,9 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="250dp"
-    android:layout_marginBottom="10dp"
-    android:layout_marginTop="10dp">
+    android:layout_height="160dp"
+    android:layout_margin="15dp">
 
 
     <androidx.cardview.widget.CardView
@@ -26,7 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.4" />
+                app:layout_constraintGuide_percent="0.6" />
 
             <ImageView
                 android:id="@+id/photoItem"
@@ -40,24 +39,24 @@
             </ImageView>
 
             <TextView
-                android:id="@+id/priceTV"
-                android:layout_width="wrap_content"
+                android:id="@+id/downloadedTV"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="0"
+                android:layout_marginStart="8dp"
                 android:textColor="@color/colorBlack"
-                android:textSize="24sp"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/gl_hor_2" />
 
             <TextView
-                android:id="@+id/descriptionTV"
-                android:layout_width="wrap_content"
+                android:id="@+id/tagsTV"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginStart="8dp"
+                android:textColor="@color/colorBlack"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/gl_hor_2"
-                app:layout_constraintTop_toTopOf="parent">
-            </TextView>
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 

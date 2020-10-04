@@ -1,7 +1,7 @@
 package com.example.diplomapp.di
 
 import android.content.Context
-import com.example.diplomapp.repo.RoomRepo
+import com.example.diplomapp.repo.FlowerRepo
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,10 +12,10 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(ApplicationComponent::class)
-class DatabaseModule {
+class FlowerRepoModule {
     @Provides
     @Singleton
-    fun provideRoomModule(@ApplicationContext context: Context): RoomRepo {
-        return RoomRepo(context)
+    fun provideFlowerModule(@ApplicationContext context: Context): FlowerRepo {
+        return FlowerRepo(context)
     }
 }

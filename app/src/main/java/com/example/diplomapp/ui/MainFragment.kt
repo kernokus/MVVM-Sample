@@ -12,32 +12,22 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.diplomapp.R
-import com.example.diplomapp.repo.RoomRepo
 import com.example.diplomapp.room.Flower
 import com.example.diplomapp.viewModels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.item_catalog.view.*
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainFragment:Fragment() {
-
-
-//    @Inject
-//    lateinit var roomRepo: RoomRepo
-
-     private val flowerViewModel:MainViewModel by viewModels()
-
-
-
+    private val flowerViewModel:MainViewModel by viewModels()
     private lateinit var myAdapter :AdapterFlower
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         return inflater.inflate(
             R.layout.fragment_main,
             container, false)
@@ -45,24 +35,13 @@ class MainFragment:Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         recycler_view.layoutManager= LinearLayoutManager(context)
-        val items: ArrayList<Flower>? = arrayListOf()
-        //flowerViewModel=ViewModelProviders.of(this).get(MainViewModel::class.java)
-        myAdapter=AdapterFlower(items)
+        myAdapter=AdapterFlower(emptyList())
         recycler_view.adapter =myAdapter
-        Log.d("InViewCreated","beforeObserver")
-//        flowerViewModel.getListFlowers().observe(viewLifecycleOwner, Observer {
-//            //Log.d("InObserverITIT",it.toString()) //приходит null
-//            //if (it==null) {return@Observer}
-//                myAdapter.setData(it)
-//                Log.d("InObserver","working")
-//        })
+
         flowerViewModel.getListFlowers().observeNonNull(this){
             myAdapter.setData(it)
         }
-
-
     }
 
 
@@ -72,9 +51,9 @@ class MainFragment:Fragment() {
         }
         inner class FlowerViewHolder constructor(itemView: View): RecyclerView.ViewHolder(itemView) {
             fun bind(item: Flower) {
-                itemView.priceTV.text=item.price
+                itemView.tagsTV.text=item.tags
                 Glide.with(context!!).load(item.url).into(itemView.photoItem)
-                itemView.descriptionTV.text=item.name
+                itemView.downloadedTV.text=item.downloaded
             }
         }
 
@@ -90,11 +69,9 @@ class MainFragment:Fragment() {
             this.values = newData
             notifyDataSetChanged()
         }
-
-
     }
 
-    fun <T> LiveData<T>.observeNonNull(lifecycleOwner: LifecycleOwner, onItem: (T) -> Unit) {
+    private fun <T> LiveData<T>.observeNonNull(lifecycleOwner: LifecycleOwner, onItem: (T) -> Unit) {
         this.observe(lifecycleOwner, object : NonNullObserver<T> {
             override fun onChangedNonNull(t: T) {
                 onItem(t)

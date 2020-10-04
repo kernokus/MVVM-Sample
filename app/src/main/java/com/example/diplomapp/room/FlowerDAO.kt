@@ -1,9 +1,6 @@
 package com.example.diplomapp.room
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.example.diplomapp.model.FlowerListPOJO
-import com.example.diplomapp.model.FlowerPOJO
 
 
 @Dao

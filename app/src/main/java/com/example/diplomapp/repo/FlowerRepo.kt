@@ -18,7 +18,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class RoomRepo ( val context: Context) {
+class FlowerRepo (private val context: Context) {
     companion object {
         const val API_KEY_PIXABAY = "17951668-b5172637b18686031bb7db33b"
     }
@@ -26,20 +26,12 @@ class RoomRepo ( val context: Context) {
     @InstallIn(ApplicationComponent::class)
     @EntryPoint
     interface HiltProviderEntryPoint {
-        fun appDatabase(): AppDatabase
         fun flowerDAO(): FlowerDAO?
         fun network(): FlowService
     }
 
-    private val appDatabase = getAppDatabase()
     private val flowerDao = getUserDao()
     private val network = getNetwork()
-
-    private fun getAppDatabase(): AppDatabase {
-        val hiltEntryPoint =
-            EntryPointAccessors.fromApplication(context, HiltProviderEntryPoint::class.java)
-        return hiltEntryPoint.appDatabase()
-    }
 
     private fun getUserDao(): FlowerDAO? {
         val hiltEntryPoint =
@@ -53,47 +45,26 @@ class RoomRepo ( val context: Context) {
         return hiltEntryPoint.network()
     }
 
-
-//    suspend fun loadfromBD(): MutableLiveData<List<Flower>> {
-//        // withContext(Dispatchers.IO){}
-//        val temp=flowerDao?.findAll() //беру данные из базы данных,если они не null
-//        val data: MutableList<Flower>? = arrayListOf()
-//        val liveData:MutableLiveData<List<Flower>> = MutableLiveData()
-//            liveData.postValue(temp)
-//            Log.d("InLOADING",temp.toString())
-//            return liveData //возвращаю из бд
-//    }
-
-//    suspend fun isNotDBEmpty():Boolean { //db- not empty?
-//        if (flowerDao?.findAll()!=null) {
-//            return true
-//        }
-//        return false
-//    }
-
     suspend fun loadInDD(): List<Flower>? {
-        val temp=flowerDao?.findAll() //беру данные из базы данных,если они не null
+        val colorListFromDB=flowerDao?.findAll() //беру данные из базы данных,если они не null
         val data: MutableList<Flower>? = arrayListOf()
-        val liveData:MutableLiveData<List<Flower>> = MutableLiveData()
-        if (temp?.size!=0 && temp!=null) { //если бд не пустая
-            //liveData.postValue(temp)
-            Log.d("InLOADING",temp.toString())
-            return temp //возвращаю из бд
+        if (colorListFromDB?.size!=0 && colorListFromDB!=null) { //если бд не пустая
+            Log.d("InLOADING",colorListFromDB.toString())
+            return colorListFromDB //возвращаю из бд
         }
         else {
-            val dataNetwork = network.getFlowList(API_KEY_PIXABAY, "yellow+flowers", "photo").hits
-            if (dataNetwork != null) {
-                for (item in dataNetwork) { //преобразую для хранения в room
+            val colorListFromNetwork = network.getFlowList(API_KEY_PIXABAY, "yellow+flowers", "photo").colorList
+            if (colorListFromNetwork != null) {
+                for (item in colorListFromNetwork) { //преобразую для хранения в room
                     val newFlower = Flower(
                         0,
-                        item.downloads.toString(),
-                        item.tags.toString(),
-                        item.largeImageURL.toString()
+                        item.downloads.toString()+" downloads",
+                        "Tags: "+item.tags.toString(),
+                        item.webformatURL.toString()
                     )
                     data?.add(newFlower)
                 }
                 flowerDao?.saveAll(data)
-                liveData.postValue(data)
             }
             return data //возвращаю только что полученные из бд данные
         }

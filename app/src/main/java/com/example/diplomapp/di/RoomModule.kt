@@ -20,5 +20,5 @@ class RoomModule {
 
     @Provides
     @Singleton
-    fun provideFlowDao(appDatabase: AppDatabase) = appDatabase.FlowerDao()
+    fun provideFlowDao(appDatabase: AppDatabase) = appDatabase.flowerDao()
 }

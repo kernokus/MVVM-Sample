@@ -16,6 +16,6 @@ class FlowerPOJO {
 
     @SerializedName("hits")
     @Expose
-    var hits: List<FlowerListPOJO>? = null
+    var colorList: List<ColorListPOJO>? = null
 
 }
